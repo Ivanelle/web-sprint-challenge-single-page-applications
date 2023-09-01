@@ -1,11 +1,22 @@
 import React from "react";
+import { Routes, Route, Link } from "react-router-dom";
+import Homepage from "./Components/Homepage"
+import Form from './Components/Form'
 
-const App = () => {
+const style = { margin: '1rem', padding: '1rem', border: '2px solid black' }
+
+export default function App() {
   return (
-    <>
-      <h1>Lambda Eats</h1>
-      <p>You can remove this code and create your own header</p>
-    </>
+    <div style={style} >
+      <h1>Bloomtech Eats</h1>
+      <nav>
+      <Link to="/">Home</Link>&nbsp;
+      <Link to="pizza">Hungry for Pizza?</Link>
+      </nav>
+      <Routes>
+        <Route path="/" element={<Homepage />} />
+        <Route path="/pizza" element={<Form />}/>
+      </Routes>
+      </div>
   );
 };
-export default App;
