@@ -15,7 +15,7 @@ export default function App() {
       </nav>
       <Routes>
         <Route path="/" element={<Homepage />} />
-        <Route path="/pizza" element={<Form />}/>
+        <Route path="/pizza" element={<Form type name value checked />}/>
       </Routes>
       </div>
   );

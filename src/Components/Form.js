@@ -1,11 +1,14 @@
 import React, { useState, useEffect} from 'react';
 import userSchema from '../Validation/userSchema';
+import * as yup from 'yup';
+import axios from 'axios';
 
 const style = { margin: '1rem', padding: '1rem', border: '2px solid black' }
 
 const initialValues = {
 	name: '',
  	size: '',
+    sauce:'',
  	hasPineapple: false,
  	hasPulledPork: false,
  	hasSpinach: false,
@@ -18,19 +21,36 @@ const initialErrors = {
 	name: ''
 }
 
-const onChange = evt => {
-let { type, name, value, checked } = evt.target
-}
 
-const onSubmit = () => {
-
-}
 
 export default function Form(props) {
 const [values, setValues] = useState(initialValues);
 const [errors, setErrors] = useState(initialErrors);
 
+
+
+const onChange = evt => {
+    let { type, name, value, checked } = evt.target
+    const valueToUse = type === 'checkbox' ? checked : value;
+    setValues({ ...values, [name]: valueToUse })
+    yup.reach(userSchema, name).validate(value)
+    .then(() => setErrors({...errors, [name]: ''}))
+    .catch((err) => setErrors({...errors, [name]: err.errors[0]}))
+    }
+    
+    const onSubmit = evt => {
+    evt.preventDefault()
+    axios.post('https://reqres.in/api/orders', values)
+        .then(res => {
+            setValues(res.data)
+        })
+        .catch((err) => {
+            console.error(err)
+        })
+    }
+
     return (
+
     <div>
 
         <h2>Build Your Own Pizza</h2>
@@ -49,6 +69,7 @@ const [errors, setErrors] = useState(initialErrors);
                 <option value='medium'>Medium</option>
                 <option value='large'>Large</option>
             </select>
+            </div>
 
             <div>
                 
@@ -100,8 +121,15 @@ const [errors, setErrors] = useState(initialErrors);
                 </label>
             </div>
 
-            
-     
+            <div>
+                <h3>Special Instructions</h3>
+                <textarea values={values.specialText} id='special-text' onChange={onChange} name='specialText' />
+            </div>
+
+            <div>
+                <button id='order-button' type='submit' onSubmit={onSubmit}>
+                    Gimme!
+                </button>
             </div>
          </form>
     </div>
