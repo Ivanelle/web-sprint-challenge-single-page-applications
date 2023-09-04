@@ -32,7 +32,7 @@ const [errors, setErrors] = useState(initialErrors);
 const onChange = evt => {
     let { type, name, value, checked } = evt.target
     const valueToUse = type === 'checkbox' ? checked : value;
-    setValues({ ...values, [name]: valueToUse })
+    setValues({ ...values, [name]: value })
     yup.reach(userSchema, name).validate(value)
     .then(() => setErrors({...errors, [name]: ''}))
     .catch((err) => setErrors({...errors, [name]: err.errors[0]}))
@@ -43,6 +43,7 @@ const onChange = evt => {
     axios.post('https://reqres.in/api/orders', values)
         .then(res => {
             setValues(res.data)
+            console.log(res.data)
         })
         .catch((err) => {
             console.error(err)
@@ -54,7 +55,7 @@ const onChange = evt => {
     <div>
 
         <h2>Build Your Own Pizza</h2>
-        <form onSubmit={onSubmit}>
+        <form onSubmit={onSubmit} id='pizza-form'>
             <div>
             <h3 htmlFor='name'>Insert Name:</h3>
             <input value={values.name} id='name-input' onChange={onChange} type='text' name='name' placeholder='Your Pizzas Name'/>
